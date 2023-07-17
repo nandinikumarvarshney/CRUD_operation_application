@@ -2,11 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
@@ -14,29 +9,48 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
-public class UserService implements UserServiceInter {
+public class UserServiceVerbose implements UserServiceInter {
     UserRepository repo;
-    public UserService(UserRepository repo){
+    public UserServiceVerbose(UserRepository repo){
         this.repo = repo;
     }
-
     public User createUser(User user){
         return repo.save(user);
     }
     public List<String> getUsers(){
+
         List<User> user1 = new ArrayList<User>();
         repo.findAll().forEach(user -> user1.add(user));
-        List<String> userString = new ArrayList<String>();
-        userString.add(user1.toString());
-        return userString; //List of JSON strings is returned
+        List<String> AllVerbose = new ArrayList<String>();
+        for (User user: user1){
+            String Verbose = " ";
+            Field fields[] = user.getClass().getDeclaredFields();
+            for (Field x : fields) {
+                x.setAccessible(true);
+                try {
+                    Verbose += x.getName() + (x.get(user)) + "::";
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            AllVerbose.add(Verbose);
+        }
+        return AllVerbose;
+
     }
     public String getUserById(int userid){
-
-        User user = repo.findById(userid).orElse(null);
-        return user.toString(); //Converted into JSON String
-
-
+        String Verbose = "";
+        User user = repo.findById(userid).get();
+        Field fields[] = user.getClass().getDeclaredFields();
+        for (Field x : fields) {
+            x.setAccessible(true);
+            try {
+                Verbose += x.getName() + (x.get(user)) + "::";
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return Verbose;
 
     }
     public String updateUser(int userid, Optional<String> name, Optional<Integer>TTL, Optional<Timestamp>timestamp){
@@ -56,9 +70,6 @@ public class UserService implements UserServiceInter {
             return "User values are updated";
         }
         return "User not found";
-
-
-
     }
     public String deleteUser(int userid){
 
@@ -70,5 +81,3 @@ public class UserService implements UserServiceInter {
         }
     }
 }
-
-

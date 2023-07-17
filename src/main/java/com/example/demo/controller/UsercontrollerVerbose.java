@@ -1,27 +1,22 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.User;
-import com.example.demo.service.UserService;
 import com.example.demo.service.UserServiceInter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
-@RequestMapping("/user")
-public class Usercontroller {
+@RequestMapping("/userVerbose")
+public class UsercontrollerVerbose {
     @Autowired
-    @Qualifier("User")
+    @Qualifier("UserVerbose")
     UserServiceInter service;
-
-
 
     @PostMapping("/create")
     public User saveUser(@RequestBody User user) {
@@ -30,8 +25,8 @@ public class Usercontroller {
 
     @GetMapping("/getusers")
     public List<String> getUser() {
-
         return service.getUsers();
+
     }
 
     @GetMapping("/getuser/{userid}")
@@ -49,9 +44,5 @@ public class Usercontroller {
     @DeleteMapping("/delete/{userid}")
     public String deleteUser(@PathVariable int userid) {
         return service.deleteUser(userid);
-
     }
-
-
-
 }
