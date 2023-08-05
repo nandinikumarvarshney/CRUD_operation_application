@@ -1,10 +1,12 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.sql.Timestamp;
 
 @Entity
+@Data
 @Table(name="user_table")
 
 public class User {
@@ -22,45 +24,5 @@ public class User {
     @Column
     private Timestamp timestamp;
 
-    public User(){
 
-    }
-    public User(String name,int TTL, Timestamp timestamp){
-        super();
-        this.name=name;
-        this.TTL=TTL;
-        this.timestamp=timestamp;
-    }
-    public int getId()
-    {
-        return userid;
-    }
-    public void setId(int userid)
-    {
-        this.userid = userid;
-    }
-    public String getName()
-    {
-        return name;
-    }
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-    public int getTTL()
-    {
-        return TTL;
-    }
-    public void setTTL(int TTL)
-    {
-        this.TTL = TTL;
-    }
-    public Timestamp getTimestamp()
-    {
-        return timestamp;
-    }
-    public void setTimestamp(Timestamp timestamp)
-    {
-        this.timestamp = timestamp;
-    }
 }
